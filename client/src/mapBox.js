@@ -189,12 +189,19 @@ export default class MapBox extends React.Component {
 
     }
 
-    flyToCountry(map, coordinates) {
+    flyToCountry(map, coordinates, description) {
         map.flyTo({
             center: coordinates,
             zoom: 5
         })
+
+        new mapboxgl.Popup({ className: "pop-up-from-list" })
+                    .setLngLat(coordinates)
+                    .setHTML(description)
+                    .addTo(map);
+
     }
+
 
     async componentDidMount() {
         await fetch('http://localhost:8080/')
@@ -209,7 +216,7 @@ export default class MapBox extends React.Component {
                         },
                         properties: {
                             title: item.Country,
-                            description: `<p><strong>Total Confirmed: </strong>${item.TotalConfirmed}</p><p><strong>Total Deaths: </strong>${item.TotalDeaths}</p>`
+                            description: `<h5>${item.Country}</h5><p><strong>Total Confirmed: </strong>${item.TotalConfirmed}</p><p><strong>Total Deaths: </strong>${item.TotalDeaths}</p>`
                         }
                     }
                     var joined = this.state.geoData.concat(tempJson)
@@ -229,6 +236,9 @@ export default class MapBox extends React.Component {
 
     render() {
         var map = this.state.map != undefined ? this.state.map : ''
+        var popUpDescription = function(country, totalConfirmed, totalDeaths) { 
+            return `<h5>${country}</h5><p><strong>Total Confirmed: </strong>${totalConfirmed}</p><p><strong>Total Deaths: </strong>${totalDeaths}</p>`
+        }
     
         return (
             <div className="row">
@@ -242,7 +252,7 @@ export default class MapBox extends React.Component {
                         <div>
                             {this.state.covidData.map((country, index) =>
                             <div className="item" key={index}>
-                                <a onClick={() => this.flyToCountry(map, [country.longitude, country.latitude])} className="title" href="#">{country.Country}</a>
+                                <a onClick={() => this.flyToCountry(map, [country.longitude, country.latitude], popUpDescription(country.Country, country.TotalConfirmed, country.TotalDeaths))} className="title" href="#">{country.Country}</a>
                                 <div>{country.TotalConfirmed}</div>
                             </div>
                         )}
