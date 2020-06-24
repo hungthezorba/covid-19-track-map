@@ -254,9 +254,9 @@ export default class MapBox extends React.Component {
         return (
             <div className="row">
                 <div ref={this.mapRef} className="mapContainer pad2" />
-                <div className="sidebar pad2">
+                <div className="sidebar pad">
                         {this.state.summary != "" ?
-                        <div className="heading">
+                        <div className="heading pad2">
                             <h3>COVID-19 TRACK MAP</h3>
                             <div class="statistic">
                                             <div>
@@ -278,7 +278,7 @@ export default class MapBox extends React.Component {
                         :
                         ''    
                     }
-                    <div id="listings" className="listings">
+                    <div id="listings" className="listings pad2">
                         {map != "" ?
                             <div>
                                 {this.state.covidData.map((country, index) =>
@@ -311,6 +311,24 @@ export default class MapBox extends React.Component {
 
 
 
+                    </div>
+                    <div id="author-info">
+                    <a target="_blank" href="https://github.com/hungthezorba?tab=repositories">
+                        <div id="github-icon-holder"  className="column">
+                            <i className="fab fa-github info-icon fa-2x"></i>
+                        </div>
+                        </a>
+                        <a target="_blank" href="https://github.com/hungthezorba?tab=repositories">
+                        <div id="facebook-icon-holder" className="column">
+                        <i id="facebook-icon" className="fab fa-facebook-f info-icon fa-2x"></i>
+                        </div>
+                        </a>
+                        <a target="_blank" href="https://github.com/hungthezorba?tab=repositories">
+                        <div id="twitter-icon-holder" className="column">
+                        <i id="twitter-icon" className="fab fa-twitter info-icon fa-2x"></i>
+
+                        </div>
+                        </a>
                     </div>
                 </div>
             </div>
