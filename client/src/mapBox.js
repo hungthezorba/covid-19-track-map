@@ -14,13 +14,14 @@ export default class MapBox extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            map : undefined,
+            map: undefined,
             lng: 106.660172,
             lat: 10.762622,
             zoom: 2,
             dotSize: 100,
             covidData: [],
             geoData: [],
+            summary : {},
             testdata: [
                 {
                     "type": "Feature",
@@ -48,6 +49,14 @@ export default class MapBox extends React.Component {
             ]
         }
 
+    }
+
+    fetchSummary() {
+        fetch('https://api.covid19api.com/summary')
+        .then(res => res.json())
+        .then(result => {
+            this.setState({summary: result.Global})
+        })
     }
 
     fetchCovid19API() {
@@ -79,7 +88,7 @@ export default class MapBox extends React.Component {
         const dotSize = this.state.dotSize
         const geoData = this.state.geoData
 
-        map.on('load',  () => {
+        map.on('load', () => {
             map.addImage('pulsing-dot', pulsingDot, { pixelRatio: 2 });
             map.addSource('points', {
                 'type': 'geojson',
@@ -90,7 +99,7 @@ export default class MapBox extends React.Component {
             });
 
 
-         map.addLayer({
+            map.addLayer({
                 'id': 'points',
                 'type': 'symbol',
                 'source': 'points',
@@ -196,9 +205,9 @@ export default class MapBox extends React.Component {
         })
 
         new mapboxgl.Popup({ className: "pop-up-from-list" })
-                    .setLngLat(coordinates)
-                    .setHTML(description)
-                    .addTo(map);
+            .setLngLat(coordinates)
+            .setHTML(description)
+            .addTo(map);
 
     }
 
@@ -223,47 +232,85 @@ export default class MapBox extends React.Component {
                     this.setState({ covidData: result, geoData: joined })
                 })
             })
-            this.map = new mapboxgl.Map({
-                container: this.mapRef.current,
-                style: 'mapbox://styles/mapbox/streets-v11',
-                center: [this.state.lng, this.state.lat],
-                zoom: this.state.zoom
-            });
-            this.setState({map: this.map})
-            this.createMap(this.map)
+        this.map = new mapboxgl.Map({
+            container: this.mapRef.current,
+            style: 'mapbox://styles/mapbox/streets-v11',
+            center: [this.state.lng, this.state.lat],
+            zoom: this.state.zoom
+        });
+        this.setState({ map: this.map })
+        this.createMap(this.map)
+        this.fetchSummary()
     }
 
 
     render() {
         var map = this.state.map != undefined ? this.state.map : ''
-        var popUpDescription = function(country, totalConfirmed, totalDeaths) { 
+        var popUpDescription = function (country, totalConfirmed, totalDeaths) {
             return `<h5>${country}</h5><p><strong>Total Confirmed: </strong>${totalConfirmed}</p><p><strong>Total Deaths: </strong>${totalDeaths}</p>`
         }
-    
+
+
         return (
             <div className="row">
                 <div ref={this.mapRef} className="mapContainer pad2" />
                 <div className="sidebar pad2">
-                    <div className="heading">
-                        <h1></h1>
-                    </div>
-                    <div id="listings" className="listings">
-                        {map != "" ? 
-                        <div>
-                            {this.state.covidData.map((country, index) =>
-                            <div className="item" key={index}>
-                                <a onClick={() => this.flyToCountry(map, [country.longitude, country.latitude], popUpDescription(country.Country, country.TotalConfirmed, country.TotalDeaths))} className="title" href="#">{country.Country}</a>
-                                <div>{country.TotalConfirmed}</div>
-                            </div>
-                        )}
-                
-                            </div>
-                        :    
-                        ''
+                        {this.state.summary != "" ?
+                        <div className="heading">
+                            <h3>COVID-19 TRACK MAP</h3>
+                            <div class="statistic">
+                                            <div>
+                                                <i className="fas fa-briefcase-medical stat-icon"></i><p>Total Cases: {this.state.summary.TotalConfirmed}</p>
+
+                                            </div>
+                                            <div>
+                                                <i className="fas fa-skull stat-icon"></i><p>Total Deaths: {this.state.summary.TotalDeaths}</p>
+
+                                            </div>
+
+                                            <div>
+                                                <i className="fas fa-plus-square stat-icon"></i><p>Total Recovered: {this.state.summary.TotalRecovered}</p>
+
+                                                </div>
+
+                                                </div>
+                        </div>
+                        :
+                        ''    
                     }
-                        
-                    
-                        
+                    <div id="listings" className="listings">
+                        {map != "" ?
+                            <div>
+                                {this.state.covidData.map((country, index) =>
+                                    <div className="item" key={index}>
+                                        <a onClick={() => this.flyToCountry(map, [country.longitude, country.latitude], popUpDescription(country.Country, country.TotalConfirmed, country.TotalDeaths))} className="title" href="#">{country.Country}</a>
+                                        <div class="statistic">
+                                            <div>
+                                                <i className="fas fa-briefcase-medical stat-icon"></i><p>Cases: {country.TotalConfirmed}</p>
+
+                                            </div>
+                                            <div>
+                                                <i className="fas fa-skull stat-icon"></i><p>Deaths: {country.TotalDeaths}</p>
+
+                                            </div>
+
+                                            <div>
+                                                <i className="fas fa-plus-square stat-icon"></i><p>Recovered: {country.TotalRecovered}</p>
+
+                                                </div>
+
+                                                </div>
+
+                                            </div>
+                                )}
+
+                            </div>
+                            :
+                            ''
+                        }
+
+
+
                     </div>
                 </div>
             </div>
