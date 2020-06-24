@@ -21,7 +21,7 @@ export default class MapBox extends React.Component {
             dotSize: 100,
             covidData: [],
             geoData: [],
-            summary : {},
+            summary: {},
             testdata: [
                 {
                     "type": "Feature",
@@ -53,10 +53,10 @@ export default class MapBox extends React.Component {
 
     fetchSummary() {
         fetch('https://api.covid19api.com/summary')
-        .then(res => res.json())
-        .then(result => {
-            this.setState({summary: result.Global})
-        })
+            .then(res => res.json())
+            .then(result => {
+                this.setState({ summary: result.Global })
+            })
     }
 
     fetchCovid19API() {
@@ -255,28 +255,29 @@ export default class MapBox extends React.Component {
             <div className="row">
                 <div ref={this.mapRef} className="mapContainer pad2" />
                 <div className="sidebar pad">
-                        {this.state.summary != "" ?
-                        <div className="heading pad2">
+                    {this.state.summary != "" ?
+                        <div  className="heading pad2">
                             <h3>COVID-19 TRACK MAP</h3>
-                            <div class="statistic">
-                                            <div>
-                                                <i className="fas fa-briefcase-medical stat-icon"></i><p>Total Cases: {this.state.summary.TotalConfirmed}</p>
+                            <h4 style={{color: 'red'}}>World</h4>
+                            <div style={{padding: '10px'}} class="statistic">
+                                <div>
+                                    <i className="fas fa-briefcase-medical stat-icon"></i><p>Total Cases: {this.state.summary.TotalConfirmed}</p>
 
-                                            </div>
-                                            <div>
-                                                <i className="fas fa-skull stat-icon"></i><p>Total Deaths: {this.state.summary.TotalDeaths}</p>
+                                </div>
+                                <div>
+                                    <i className="fas fa-skull stat-icon"></i><p>Total Deaths: {this.state.summary.TotalDeaths}</p>
 
-                                            </div>
+                                </div>
 
-                                            <div>
-                                                <i className="fas fa-plus-square stat-icon"></i><p>Total Recovered: {this.state.summary.TotalRecovered}</p>
+                                <div>
+                                    <i className="fas fa-plus-square stat-icon"></i><p>Total Recovered: {this.state.summary.TotalRecovered}</p>
 
-                                                </div>
+                                </div>
 
-                                                </div>
+                            </div>
                         </div>
                         :
-                        ''    
+                        ''
                     }
                     <div id="listings" className="listings pad2">
                         {map != "" ?
@@ -297,11 +298,11 @@ export default class MapBox extends React.Component {
                                             <div>
                                                 <i className="fas fa-plus-square stat-icon"></i><p>Recovered: {country.TotalRecovered}</p>
 
-                                                </div>
-
-                                                </div>
-
                                             </div>
+
+                                        </div>
+
+                                    </div>
                                 )}
 
                             </div>
@@ -313,21 +314,21 @@ export default class MapBox extends React.Component {
 
                     </div>
                     <div id="author-info">
-                    <a target="_blank" href="https://github.com/hungthezorba?tab=repositories">
-                        <div id="github-icon-holder"  className="column">
-                            <i className="fab fa-github info-icon fa-2x"></i>
-                        </div>
+                        <a target="_blank" href="https://github.com/hungthezorba?tab=repositories">
+                            <div id="github-icon-holder" className="column">
+                                <i className="fab fa-github info-icon fa-2x"></i>
+                            </div>
                         </a>
                         <a target="_blank" href="https://github.com/hungthezorba?tab=repositories">
-                        <div id="facebook-icon-holder" className="column">
-                        <i id="facebook-icon" className="fab fa-facebook-f info-icon fa-2x"></i>
-                        </div>
+                            <div id="facebook-icon-holder" className="column">
+                                <i id="facebook-icon" className="fab fa-facebook-f info-icon fa-2x"></i>
+                            </div>
                         </a>
                         <a target="_blank" href="https://github.com/hungthezorba?tab=repositories">
-                        <div id="twitter-icon-holder" className="column">
-                        <i id="twitter-icon" className="fab fa-twitter info-icon fa-2x"></i>
+                            <div id="twitter-icon-holder" className="column">
+                                <i id="twitter-icon" className="fab fa-twitter info-icon fa-2x"></i>
 
-                        </div>
+                            </div>
                         </a>
                     </div>
                 </div>
